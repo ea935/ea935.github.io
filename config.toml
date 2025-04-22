@@ -1,0 +1,13 @@
+title = "ea935"
+base_url = "https://ea935.github.io"
+compile_sass = true
+build_search_index = false
+theme = "no-style-please"
+minify_html = true
+generate_feeds = true
+
+[markdown]
+highlight_code = true
+external_links_no_referrer = true
+smart_punctuation = true
+insert_anchor_links = "left"

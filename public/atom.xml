@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>ea935</title>
+    <link rel="self" type="application/atom+xml" href="https://ea935.github.io/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://ea935.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-04-22T00:00:00+00:00</updated>
+    <id>https://ea935.github.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>High frequency-ratio anagrams</title>
+        <published>2025-04-22T00:00:00+00:00</published>
+        <updated>2025-04-22T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://ea935.github.io/blog/anagrams/"/>
+        <id>https://ea935.github.io/blog/anagrams/</id>
+        
+        <content type="html" xml:base="https://ea935.github.io/blog/anagrams/">&lt;p&gt;I love looking up words on &lt;a rel=&quot;noreferrer&quot; href=&quot;https:&#x2F;&#x2F;wiktionary.org&#x2F;&quot;&gt;Wiktionary&lt;&#x2F;a&gt; in my free
+time. Looking up &lt;em&gt;bouncy castle&lt;&#x2F;em&gt; was particularly fruitful because I learned
+this fairly common word is an anagram of “cyclobutanes”, a comparatively rare
+word I’d never heard before.&lt;&#x2F;p&gt;
+
+
+    
+    
+
+&lt;img  class=&quot;invertable&quot;  src=&quot;https:&amp;#x2F;&amp;#x2F;ea935.github.io&amp;#x2F;processed_images&amp;#x2F;bouncy-castle-wiktionary.70ad730e215eb9a0.webp&quot;&gt;
+&lt;p&gt;I figured it must be possible to semi-automatically find more entertaining
+anagrams; you’d just need a word list and preferably some kind of commonality
+metric.&lt;&#x2F;p&gt;
+&lt;p&gt;My first port of call for a word list was naturally &lt;code&gt;&#x2F;usr&#x2F;share&#x2F;dict&#x2F;words&lt;&#x2F;code&gt;,
+but unfortunately on my system (where it’s provided by &lt;code&gt;wamerican&lt;&#x2F;code&gt;), it’s fairly
+small - in fact, it doesn’t even contain “cyclobutanes”.&lt;&#x2F;p&gt;
+&lt;p&gt;Blessedly though, Google seems to have forgotten it’s still hosting a common
+good: &lt;a rel=&quot;noreferrer&quot; href=&quot;https:&#x2F;&#x2F;storage.googleapis.com&#x2F;books&#x2F;ngrams&#x2F;books&#x2F;datasetsv2.html&quot;&gt;Google Books’ &lt;em&gt;Ngram Viewer&lt;&#x2F;em&gt; dataset&lt;&#x2F;a&gt;
+- every single ngram from every book Google has OCRed and how many times they’ve
+seen it. Now, this is a dataset of &lt;em&gt;ngrams&lt;&#x2F;em&gt;, not &lt;em&gt;words&lt;&#x2F;em&gt;, but 1-gram ngram
+basically means the same thing as “word” and
+&lt;a rel=&quot;noreferrer&quot; href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=m8niIHChc1Y&quot;&gt;you should just not worry about it&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;massaging-the-data&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#massaging-the-data&quot; aria-label=&quot;Anchor link for: massaging-the-data&quot;&gt;🔗&lt;&#x2F;a&gt;Massaging the Data&lt;&#x2F;h2&gt;
+&lt;p&gt;The dataset is split into about 25 files with one CSV for each letter
+of the alphabet, so I threw together a &lt;a rel=&quot;noreferrer&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ea935&#x2F;x&#x2F;blob&#x2F;master&#x2F;anagrams&#x2F;download.py&quot;&gt;script&lt;&#x2F;a&gt;
+to download all of the CSVs.&lt;&#x2F;p&gt;
+&lt;p&gt;Additionally, the data isn’t in the exact right format yet. The CSVs actually
+record how many times a word was seen &lt;em&gt;in a given year&lt;&#x2F;em&gt;, and how many pages and
+volumes it was seen on. This makes the CSVs way bigger than they need to be for
+my purposes, which makes computations way slower. So I have to fix that too.
+At first I wrote another Python script to do this, but my naïve algorithm was
+frankly way too slow so I scrapped it and &lt;a rel=&quot;noreferrer&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ea935&#x2F;x&#x2F;blob&#x2F;master&#x2F;anagrams&#x2F;src&#x2F;main.rs#L102&quot;&gt;used Rust instead&lt;&#x2F;a&gt;.
+I also &lt;a rel=&quot;noreferrer&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ea935&#x2F;x&#x2F;blob&#x2F;master&#x2F;anagrams&#x2F;src&#x2F;main.rs#L81&quot;&gt;sorted the words by frequency&lt;&#x2F;a&gt;
+so that I can find anagrams with the highest frequency ratio by selecting a word
+from the top of the list then iterating up from the bottom.&lt;&#x2F;p&gt;
+&lt;p&gt;Something I discovered very quickly is that my code shouldn’t &lt;a rel=&quot;noreferrer&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ea935&#x2F;x&#x2F;blob&#x2F;master&#x2F;anagrams&#x2F;src&#x2F;main.rs#L45&quot;&gt;consider a word an anagram of itself&lt;&#x2F;a&gt; (is a word an anagram of itself?), and that Google’s dataset wasn’t perfect.
+Because the data is from OCRed books, and OCR isn’t infallible, most of the words
+with very low frequencies were actually other words misspelt or misread, so I
+&lt;a rel=&quot;noreferrer&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ea935&#x2F;x&#x2F;blob&#x2F;master&#x2F;anagrams&#x2F;src&#x2F;main.rs#L49&quot;&gt;skipped words with very low frequencies&lt;&#x2F;a&gt;
+too. I also threw out words &lt;a rel=&quot;noreferrer&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ea935&#x2F;x&#x2F;blob&#x2F;master&#x2F;anagrams&#x2F;src&#x2F;main.rs#L26&quot;&gt;under 10 letters long&lt;&#x2F;a&gt;
+because those are boring.&lt;&#x2F;p&gt;
+&lt;p&gt;My method of determining whether two words were anagrams was naïve (this is a
+theme) - sort the letters of both words and check if the results are identical.&lt;&#x2F;p&gt;
+&lt;p&gt;And that’s pretty much it! My program started spitting out multiple anagrams
+every second.&lt;&#x2F;p&gt;
+
+    
+
+
+    
+
+&lt;img  src=&quot;&amp;#x2F;images&amp;#x2F;anagram-o-matic.webp&quot;&gt;
+&lt;p&gt;It still produces “anagrams” between a word and a misspelling, but there’s few
+enough to filter out manually - which I have to do anyway, because computers
+are incapable yet of objectively measuring humour.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;results&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#results&quot; aria-label=&quot;Anchor link for: results&quot;&gt;🔗&lt;&#x2F;a&gt;Results&lt;&#x2F;h2&gt;
+&lt;p&gt;First and foremost, this gem:&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Eins&lt;&#x2F;th&gt;&lt;th&gt;Zwei&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;legislator&lt;&#x2F;td&gt;&lt;td&gt;allegorists&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h3 id=&quot;common-uncommon-pairs&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#common-uncommon-pairs&quot; aria-label=&quot;Anchor link for: common-uncommon-pairs&quot;&gt;🔗&lt;&#x2F;a&gt;Common&#x2F;uncommon Pairs&lt;&#x2F;h3&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Uno&lt;&#x2F;th&gt;&lt;th&gt;Dos&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;regulation&lt;&#x2F;td&gt;&lt;td&gt;urogenital&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;oscillation&lt;&#x2F;td&gt;&lt;td&gt;colonialist&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;generations&lt;&#x2F;td&gt;&lt;td&gt;nitrogenase&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;enlargement&lt;&#x2F;td&gt;&lt;td&gt;greenmantle&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;incorporate&lt;&#x2F;td&gt;&lt;td&gt;procreation&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;petrochemicals&lt;&#x2F;td&gt;&lt;td&gt;cephalometric&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;disharmony&lt;&#x2F;td&gt;&lt;td&gt;hydramnios&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;paternalistic&lt;&#x2F;td&gt;&lt;td&gt;antiparticles&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;intoxicate&lt;&#x2F;td&gt;&lt;td&gt;excitation&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;relationships&lt;&#x2F;td&gt;&lt;td&gt;rhinoplasties&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;residential&lt;&#x2F;td&gt;&lt;td&gt;estrildinae&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;nationalised&lt;&#x2F;td&gt;&lt;td&gt;desalination&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Gasherbrum&lt;&#x2F;td&gt;&lt;td&gt;hamburgers&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;parenthesis&lt;&#x2F;td&gt;&lt;td&gt;interphases&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;complicates&lt;&#x2F;td&gt;&lt;td&gt;ectoplasmic&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;absolution&lt;&#x2F;td&gt;&lt;td&gt;isobutanol&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;insatiable&lt;&#x2F;td&gt;&lt;td&gt;banalities&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h3 id=&quot;antonym-pairs&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#antonym-pairs&quot; aria-label=&quot;Anchor link for: antonym-pairs&quot;&gt;🔗&lt;&#x2F;a&gt;Antonym Pairs&lt;&#x2F;h3&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Un&lt;&#x2F;th&gt;&lt;th&gt;Deux&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;compressed&lt;&#x2F;td&gt;&lt;td&gt;decompress&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;marginally&lt;&#x2F;td&gt;&lt;td&gt;alarmingly&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;desecration&lt;&#x2F;td&gt;&lt;td&gt;considerate&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h3 id=&quot;misc&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#misc&quot; aria-label=&quot;Anchor link for: misc&quot;&gt;🔗&lt;&#x2F;a&gt;Misc.&lt;&#x2F;h3&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;一&lt;&#x2F;th&gt;&lt;th&gt;二&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;assimilation&lt;&#x2F;td&gt;&lt;td&gt;islamisation&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;catherals&lt;&#x2F;td&gt;&lt;td&gt;hard castle&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;tapestries&lt;&#x2F;td&gt;&lt;td&gt;striptease&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;inconsiderate&lt;&#x2F;td&gt;&lt;td&gt;containerised&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;streamlined&lt;&#x2F;td&gt;&lt;td&gt;derailments&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;supersonic&lt;&#x2F;td&gt;&lt;td&gt;percussion&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;chattering&lt;&#x2F;td&gt;&lt;td&gt;ratcheting&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;mountaineer&lt;&#x2F;td&gt;&lt;td&gt;enumeration&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;algorithms&lt;&#x2F;td&gt;&lt;td&gt;logarithms&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;recruitment&lt;&#x2F;td&gt;&lt;td&gt;current time&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;interpreter&lt;&#x2F;td&gt;&lt;td&gt;reinterpret&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;reductions&lt;&#x2F;td&gt;&lt;td&gt;discounter&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;The source code is available
+&lt;a rel=&quot;noreferrer&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ea935&#x2F;x&#x2F;tree&#x2F;master&#x2F;anagrams&quot;&gt;here&lt;&#x2F;a&gt;. I also included
+the sorted word&#x2F;frequency data as a CSV.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

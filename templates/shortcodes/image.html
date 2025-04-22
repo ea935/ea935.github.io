@@ -1,0 +1,10 @@
+{% if not height %}
+    {% set height = 400 %}
+{% endif %}
+{% if raw %}
+    {% set url = '/images/' ~ name %}
+{% else %}
+    {% set conv = resize_image(path='/static/images/' ~ name, format="webp", height=height, op="fit_height") %}
+    {% set url = conv.url %}
+{% endif %}
+<img {% if invertable %} class="invertable" {% endif %} src="{{ url }}">

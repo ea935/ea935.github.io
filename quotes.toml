@@ -1,0 +1,108 @@
+[[quotes]]
+author = "IBM"
+body = """
+A computer can never be held accountable, therefore a computer must
+never make a management decision.
+"""
+
+[[quotes]]
+author = "Terry A. Davis"
+body = """
+An idiot admires complexity, a genius admires simplicity, a
+physicist tries to make it simple, anyway, an idiot - anything the
+more complicated it is the more he will admire it, if you make
+something so clusterfucked he can't understand it he's gonna think
+you're a god cause you made it so complicated nobody can understand
+it. That's how they write journals in academic, academic journals,
+they try to make it so complicated people think you're a genius.
+"""
+
+[[quotes]]
+author = "Ben Kuhn"
+body = """
+Are there ways you behave that you wish you didn’t? What unacknowledged desires
+could be driving those?
+"""
+
+[[quotes]]
+author = "Matthew 6:34"
+body = """
+Therefore do not worry about tomorrow, for tomorrow will worry about itself.
+Sufficient for the day is its own trouble.
+"""
+
+[[quotes]]
+author = "Douglas Adams"
+body = """
+Don't panic
+"""
+
+[[quotes]]
+author = "Blaise Pascal"
+body = """
+I would have written a shorter letter, but I did not have the time.
+"""
+
+[[quotes]]
+author = "Jeremy Kun"
+body = """
+Inertia is only proof of inertia
+"""
+
+[[quotes]]
+author = "Terry A. Davis"
+body = """
+Is this too much voodoo for our mission statement?
+"""
+
+[[quotes]]
+author = "tylenol_addict"
+body = """
+le sigh... we cringe on.
+"""
+
+[[quotes]]
+author = "Bjarne Stroustrup"
+body = """
+Proof by analogy is fraud
+"""
+
+[[quotes]]
+author = "Duncan Trussell"
+body = """
+Some poor, phoneless fool is probably sitting next to a waterfall somewhere
+totally unaware of how angry and scared he’s supposed to be.
+"""
+
+[[quotes]]
+author = "Terry A. Davis"
+body = """
+When my bird was looking at my computer monitor I thought, ‘that bird has no
+idea what he's looking at’.
+"""
+
+[[quotes]]
+author = "Edsger W. Dijkstra"
+body = """
+The question of whether machines can think is about as relevant as the question
+of whether submarines can swim.
+"""
+
+[[quotes]]
+author = "CAP_NET_ADMIN"
+body = """
+We are but puny agents of entropy
+"""
+
+[[quotes]]
+author = "Theo de Raadt"
+body = """
+Of course there’s this meme out there that you shouldn’t invent your own crypto
+you should just use OpenSSL (although I’d say that meme took a pretty big whack
+over the last 6 months! [Heartbleed]), so, the problem is, people will keep
+telling you that you can’t go invent a random number subsystem just on your own,
+you’re the OpenBSD project, what do you guys know about random numbers? You’re
+Theo de Raadt, you can’t go do this. But the same sort of message is given to
+everybody out there, and it discourages anybody from even trying to build a
+layer which will do the right thing.
+"""

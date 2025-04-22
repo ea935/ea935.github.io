@@ -1,0 +1,31 @@
+{% extends "no-style-please/templates/index.html" %}
+
+{% block content %}
+{{ super() }}
+<ul>
+    {% set section = get_section(path="_index.md", metadata_only=true) %}
+    {% for section in section.subsections %}
+        {% set section = get_section(path=section) %}
+        <li><a href="{{ section.permalink }}">{{ section.title | lower }}</a></li>
+        <ul>
+            {% for heading in section.pages %}
+                <li>{{ heading.date }} - <a href="{{ heading.permalink }}">{{ heading.title }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<p>
+    {% set quotes = load_data(path="quotes.toml") %}
+    “<span id="quote-body"></span>”
+    <br>&nbsp;—<cite id="quote-author"></cite>
+    <script>
+        const quotes = {{ quotes.quotes | json_encode | safe }};
+        const quote = quotes[Math.floor(Math.random() * quotes.length)];
+        document.querySelector('#quote-body').textContent = quote.body.trim();
+        document.querySelector('#quote-author').textContent = quote.author;
+    </script>
+</p>
+{% endblock %}
