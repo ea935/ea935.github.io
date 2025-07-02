@@ -17,3 +17,12 @@
 <p class="post-meta"><time datetime="{{ page.date }}">{{ page.date }}</time></p>
 <h1>{{ page.title }}</h1>
 {% endblock %}
+
+{% block footer %}
+<hr>
+    {# TODO: hack. #}
+    {% set image = get_random(start=1, end=6) %}
+    {% set conv = resize_image(path='/static/footers/' ~ image ~ '.png', format='webp', width=200, height=200, op='fit') %}
+    {% set url = conv.url %}
+<img src="{{ url }}">
+{% endblock %}

@@ -25,6 +25,12 @@ could be driving those?
 """
 
 [[quotes]]
+author = "Albert Einstein, probably."
+body = """
+I like when it rains. Because even if I didn’t like it, it would still rain.
+"""
+
+[[quotes]]
 author = "Matthew 6:34"
 body = """
 Therefore do not worry about tomorrow, for tomorrow will worry about itself.
